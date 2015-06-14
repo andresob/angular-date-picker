@@ -33,7 +33,7 @@
         + '            </svg>'
         + '        </button>'
         + '    </div>'
-        + '    <div ng-click="pickDay($event)" layout>'
+        + '    <div ng-click="pickDay($event)" layout class="double-picker">'
         + '        <div class="_days" flex layout="column">'
         + '          <div title="{{ months[month].fullName }}" layout layout-align="center center" class="primary-info md-body-1">{{ months[month].fullName }}<span layout-padding-hor>{{ year }}</span></div>'
         + '          <div layout layout-padding>'
