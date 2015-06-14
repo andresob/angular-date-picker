@@ -1,5 +1,10 @@
 .angular-date-picker {
     position: relative;
+    outline: none;
+}
+.angular-date-picker:focus {
+    border: none;
+    outline: none;
 }
 .angular-date-picker > .buttons > button {
     position: absolute;
@@ -11,13 +16,14 @@
     padding: 0;
     text-align: center;
     height: 40px;
-    top: 130px;
+    top: 114px;
     width: 25px;
     vertical-align: middle;
     -webkit-transition: background .218s,border .218s,color .218s;
     -moz-transition: background .218s,border .218s,color .218s;
     -o-transition: background .218s,border .218s,color .218s;
     transition: background .218s,border .218s,color .218s;
+    outline: none;
 }
 .angular-date-picker > .buttons > button:hover {
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
@@ -25,11 +31,16 @@
     border: 1px solid #c6c6c6;
 }
 .angular-date-picker > .buttons > button.previous {
-    left: -17px;
+    left: -23px;
 }
 
 .angular-date-picker > .buttons > button.next {
-    right: -17px;
+    right: -23px;
+}
+
+.angular-date-picker .double-picker {
+    outline: none;
+    border: none;
 }
 
 .angular-date-picker ._days ._day {
