@@ -33,27 +33,30 @@
         + '            </svg>'
         + '        </button>'
         + '    </div>'
-        + '    <div ng-click="pickDay($event)" layout class="double-picker">'
-        + '        <div class="_days" flex layout="column">'
-        + '          <div title="{{ months[month].fullName }}" layout layout-align="center center" class="primary-info md-body-1">{{ months[month].fullName }}<span layout-padding-hor>{{ year }}</span></div>'
-        + '          <div layout layout-padding>'
-        + '             <div class="_day-of-week" ng-repeat="dayOfWeek in daysOfWeek" title="{{ dayOfWeek.fullName }}">{{ dayOfWeek.firstLetter }}</div>'
+        + '    <div ng-click="pickDay($event)" layout="column" class="double-picker" layout-align="center center">'
+        + '        <h2 layout-padding-hor>{{ year }}</h2>'
+        + '        <div layout>'
+        + '          <div class="_days" flex layout="column">'
+        + '            <div title="{{ months[month].fullName }}" layout layout-align="center center" class="primary-info md-body-1">{{ months[month].fullName }}</div>'
+        + '            <div layout layout-padding>'
+        + '               <div class="_day-of-week" ng-repeat="dayOfWeek in daysOfWeek" title="{{ dayOfWeek.fullName }}">{{ dayOfWeek.firstLetter }}</div>'
+        + '            </div>'
+        + '            <div layout-padding>'
+        + '               <div class="_day -padding" ng-repeat="day in leadingDays">{{ day }}</div>'
+        + '               <div class="_day -selectable" ng-repeat="day in days" ng-class="{ \'-selected\': (day === selectedDay), \'-today\': (day === today) }">{{ day }}</div>'
+        + '            </div>'
         + '          </div>'
-        + '          <div layout-padding>'
-        + '             <div class="_day -padding" ng-repeat="day in leadingDays">{{ day }}</div>'
-        + '             <div class="_day -selectable" ng-repeat="day in days" ng-class="{ \'-selected\': (day === selectedDay), \'-today\': (day === today) }">{{ day }}</div>'
+        + '          <div class="_days" flex layout="column">'
+        + '            <div title="{{ months[(month+1)%12].fullName }}" layout layout-align="center center" class="primary-info md-body-1">{{ months[(month+1)%12].fullName }}</div>'
+        + '            <div layout layout-padding>'
+        + '               <div class="_day-of-week" ng-repeat="dayOfWeek in daysOfWeek" title="{{ dayOfWeek.fullName }}">{{ dayOfWeek.firstLetter }}</div>'
+        + '            </div>'
+        + '            <div layout-padding>'
+        + '               <div class="_day -padding" ng-repeat="day in leadingDaysNext">{{ day }}</div>'
+        + '             <div class="_day -selectable" ng-repeat="day in days" ng-class="{ \'-selected\': (day === selectedDay) }">{{ day }}</div>'
         + '          </div>'
         + '        </div>'
-        + '        <div class="_days" flex layout="column">'
-        + '          <div title="{{ months[month].fullName }}" layout layout-align="center center" class="primary-info md-body-1">{{ months[month].fullName }}<span layout-padding-hor>{{ year }}</span></div>'
-        + '          <div layout layout-padding>'
-        + '             <div class="_day-of-week" ng-repeat="dayOfWeek in daysOfWeek" title="{{ dayOfWeek.fullName }}">{{ dayOfWeek.firstLetter }}</div>'
-        + '          </div>'
-        + '          <div layout-padding>'
-        + '             <div class="_day -padding" ng-repeat="day in leadingDays">{{ day }}</div>'
-        + '             <div class="_day -selectable" ng-repeat="day in days" ng-class="{ \'-selected\': (day === selectedDay), \'-today\': (day === today) }">{{ day }}</div>'
-        + '          </div>'
-        + '        </div>'
+        + '      </div>'
         + '    </div>'
         + '</div>'
         ;
@@ -73,6 +76,7 @@
                 var selectedDate = null,
                     days = [], // Slices of this are used for ngRepeat
                     months = [],
+                    nextMonth = [],
                     daysOfWeek = [],
                     firstDayOfWeek = $locale.DATETIME_FORMATS.FIRSTDAYOFWEEK || 0;
 
@@ -87,6 +91,15 @@
                     });
                 }
 
+
+                for (var i = 0; i < 12; i++) {
+                    nextMonth.push({
+                        fullName: $locale.DATETIME_FORMATS.MONTH[i],
+                        shortName: $locale.DATETIME_FORMATS.SHORTMONTH[i]
+                    });
+                }
+
+
                 for (var i = 0; i < 7; i++) {
                     var day = $locale.DATETIME_FORMATS.DAY[(i + firstDayOfWeek) % 7];
 
@@ -97,11 +110,13 @@
                 }
 
                 $scope.months = months;
+                $scope.nextMonth = nextMonth;
                 $scope.daysOfWeek = daysOfWeek;
 
                 function setYearAndMonth(date) {
                     $scope.year = date.getFullYear();
                     $scope.month = date.getMonth();
+                    $scope.nextMonth = date.getMonth()+1;
 
                     var now = new Date();
 
@@ -127,6 +142,19 @@
                     $scope.days = days.slice(0, daysInMonth);
                     // Ensure a total of 6 rows to maintain height consistency
                     $scope.trailingDays = days.slice(0, 6 * 7 - (leadingDays + daysInMonth));
+
+                    var firstDayOfNextMonth = new Date($scope.year, $scope.nextMonth, 1),
+                        lastDayOfNextMonth = new Date($scope.year, $scope.nextMonth + 1, 0),
+                        lastDayOfPreviousNextMonth = new Date($scope.year, $scope.nextMonth, 0),
+                        daysInNextMonth = lastDayOfNextMonth.getDate(),
+                        daysInLastNextMonth = lastDayOfPreviousNextMonth.getDate(),
+                        dayOfWeekNext = firstDayOfNextMonth.getDay(),
+                        leadingDaysNext = (dayOfWeekNext - firstDayOfWeek + 7) % 7 || 7; // Ensure there are always leading days to give context
+
+                    $scope.leadingDaysNext = days.slice(- leadingDaysNext - (31 - daysInLastNextMonth), daysInLastNextMonth);
+                    $scope.daysNext = days.slice(0, daysInNextMonth);
+                    // Ensure a total of 6 rows to maintain height consistency
+                    $scope.trailingDaysNext = days.slice(0, 6 * 7 - (leadingDaysNext + daysInNextMonth));
                 }
 
                 // Default to current year and month
