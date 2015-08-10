@@ -32,7 +32,7 @@
 
 			return {
 				restrict: 'AE',
-				templateUrl: 'views/directives/_coCalendar.html',
+				templateUrl: 'components/directives/_coCalendar.html',
 				require: '?ngModel',
 				scope:
 				{
@@ -76,9 +76,9 @@
 					$scope.getTemplate = function()
 					{
 						if ($scope.dialog)
-							return 'views/directives/_cotemplateCalendarDialog.html';
+							return 'components/directives/_cotemplateCalendarDialog.html';
 						else
-							return 'views/directives/_cotemplateCalendar.html';
+							return 'components/directives/_cotemplateCalendar.html';
 					};
 
 
