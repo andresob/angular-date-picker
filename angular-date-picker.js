@@ -46,7 +46,7 @@
         + '               <div class="_day -selectable" ng-repeat="day in days" ng-class="{ \'-selected\': (day === selectedDay), \'-today\': (day === today) }">{{ day }}</div>'
         + '            </div>'
         + '          </div>'
-        + '          <div class="_days" flex layout="column">'
+        + '          <div class="_days" flex layout="column" hide-sm>'
         + '            <div title="{{ months[(month+1)%12].fullName }}" layout layout-align="center center" class="primary-info md-body-1">{{ months[(month+1)%12].fullName }}</div>'
         + '            <div layout layout-padding>'
         + '               <div class="_day-of-week" ng-repeat="dayOfWeek in daysOfWeek" title="{{ dayOfWeek.fullName }}">{{ dayOfWeek.firstLetter }}</div>'
